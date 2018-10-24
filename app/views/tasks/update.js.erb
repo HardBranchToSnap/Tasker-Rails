@@ -1,0 +1,14 @@
+<% if @task.errors.present?%>
+    $('.title-errors_<%=@task.id%>').show();
+    <% @task.errors.full_messages.each do |message| %>
+      $('.title-errors_<%=@task.id%>').html('<%= j message %>').delay(2000).hide(400);
+    <% end %>
+<% else %>
+  $("#edit_form_<%=@task.id%>").hide();
+  $("#task_info_<%=@task.id%>").show();
+
+  var title = document.getElementById("title_<%=@task.id%>");
+  var description = document.getElementById("description_<%=@task.id%>");
+  title.innerText = '<%=@task.title%>';
+  description.innerText = '<%=@task.description%>';
+<% end %>

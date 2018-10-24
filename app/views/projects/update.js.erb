@@ -1,0 +1,11 @@
+<% if @project.errors.present?%>
+    $('#edit_errors').show();
+    <% @project.errors.full_messages.each do |message| %>
+      $('#edit_errors').html('<%= j message %>').delay(2000).hide(400);
+    <% end %>
+<% else %>
+  $('#edit_project_name').hide();
+  $("#project_name").show();
+  $('#project_name').text('<%=@project.name%>');
+  $("#edit_project").show();
+<% end %>

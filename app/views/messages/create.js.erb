@@ -1,0 +1,5 @@
+$("#message_field").val('');
+<% publish_to "/channel/project_#{@project.id}/messages" do %>
+  $("#project_messages").append('<%= j render @message %>');
+  $("#chat").scrollTop(jQuery("#chat")[0].scrollHeight);
+<% end %>

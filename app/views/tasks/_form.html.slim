@@ -1,0 +1,8 @@
+= simple_form_for @task do | f |
+  div class='field'
+  = f.label :status, class: 'label'
+    div class="control"
+      div class="select"
+        = f.input_field :status, label_html: { class: 'label' }, collection: Hash[ Task.statuses.map {|k, v| [k.split('_').first.capitalize, k]} ], prompt: 'Select status of task'
+
+  = f.button :submit, class: 'button is-success'

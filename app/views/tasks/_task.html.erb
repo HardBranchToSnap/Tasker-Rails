@@ -1,0 +1,54 @@
+
+    <script>
+      $(document).ready(function(){
+        var task_info = '#task_info_<%=task.id%>';
+        var edit_form = '#edit_form_<%=task.id%>';
+
+        $("#show-edit_<%=task.id%>").click(function(){
+          $(task_info).hide();
+          $(edit_form).show();
+        });
+
+        $("#close-edit_<%=task.id%>").click(function(){
+          $(edit_form).hide();
+          $(task_info).show();
+          $("#title_field_<%=task.id%>").val("<%=task.title%>");
+        });
+      });
+    </script>
+      <div class="box" id="task_<%=task.id%>">
+        <article class="media">
+        <div class="media-content">
+          <div class="content">
+            <div id="task_info_<%=task.id%>">
+              <p>
+                <strong id="title_<%=task.id%>">
+                  <%= task.title %>
+                </strong>
+                <span class="tag is-success"><%= link_to "#{task.status}", edit_task_path(task)%></span>
+                <br>
+                <div id="description_<%=task.id%>">
+                  <%= task.description %>
+                </div>
+              </p>
+              <div class="destroy">
+                <%= link_to 'Remove', task, {method: :delete, class: 'button is-small', remote: true} %>
+              </div>
+              <div class="edit">
+               <%= link_to 'Edit', edit_task_path(task), remote: true, class: 'button is-small', id: "show-edit_#{task.id}" %>
+              </div>
+            </div>
+            <div style="display: none;" id="edit_form_<%=task.id%>">
+              <%= simple_form_for task, remote: true do |f| %>
+                <%= f.input :title, input_html: { class: "input is-small", id: "title_field_#{task.id}", placeholder: 'This task title'}, wrapper: false, label: false %>
+                 <div style="display: none;" class="title-errors_<%=task.id%>"></div>
+                <%= f.input_field :status, label_html: { class: 'label' }, collection: Hash[ Task.statuses.map {|k, v| [k.split('_').first.capitalize, k]} ] %>
+                 <%= f.input :description, input_html: { class: 'textarea is-small', placeholder: 'What is the task features?' }, wrapper: false, label: false %>
+                <%= f.submit 'Save changes', class: 'button is-small is-success'%>
+                <a class="button is-small is-warning" id="close-edit_<%=task.id%>">Revoke</a>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        </article>
+      </div>

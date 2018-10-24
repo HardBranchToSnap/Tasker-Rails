@@ -1,0 +1,27 @@
+<% @projects.each do |project| %>
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">
+      <%= project.name %>
+    </p>
+    <a href="#" class="card-header-icon" aria-label="more options">
+      <span class="icon">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
+    </a>
+  </header>
+  <div class="card-content">
+    <div class="content">
+      <b><i><%= project.description %></i></b>
+      <br>
+      <time datetime="<%= project.created_at %>"><%= project.created_at %></time>
+    </div>
+  </div>
+  <footer class="card-footer">
+    <%= link_to 'Open', project_path(project), class: 'card-footer-item' %>
+    <a href="#" class="card-footer-item">Quick edit</a>
+    <a href="#" class="card-footer-item">Delete</a>
+  </footer>
+</div>
+<br><br>
+<% end %>

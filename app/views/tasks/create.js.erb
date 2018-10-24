@@ -1,0 +1,31 @@
+// alert('JS is working!');
+// jQuery.noConflict();
+<% if @task.errors.present?%>
+
+  $('#title').addClass('input is-danger');
+  $('.title-errors').show();
+  
+  setTimeout(function() { 
+    $('#title').removeClass('input is-danger').addClass('input');
+  }, 4000);
+  <% @task.errors.full_messages.each do |message| %>
+    $('.title-errors').html('<%= j message %>').delay(4000).hide(400);
+  <% end %>
+<% else %>
+  <% if @task.project.nil? %>
+    $(".modal").dialog('close');
+    $(".input").val('');
+    $("#task_status").val('pending');
+    $(".textarea").val('');
+      
+    $("#tasks_container").prepend('<%= j render @task %>').hide().fadeIn(500);
+    $("#no-tasks").hide();
+  <% else %>
+    $(".modal").dialog('close');
+    $(".input").val('');
+    $("#task_status").val('pending');
+    $(".textarea").val('');
+    
+    $("#project_tasks").prepend('<%= j render @task %>').hide().fadeIn(500);
+  <% end %>
+<% end %>

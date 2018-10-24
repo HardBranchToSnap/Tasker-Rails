@@ -1,0 +1,34 @@
+<%= simple_form_for @task do |f| %>
+
+<br><br>
+  <div class="field">
+  <div class="control">
+    <%= f.input :title, label_html: { class: 'label' }, required: true, input_html: { class: "input" }, wrapper: false %>
+  </div>
+</div>
+
+
+<div class="field">
+  <%= f.label :status, class: 'label'%>
+  <div class="control">
+    <div class="select">
+      <%= f.input_field :status, label_html: { class: 'label' }, collection: Hash[ Task.statuses.map {|k, v| [k.split('_').first.capitalize, k]} ], prompt: 'Select status of task' %>
+    </div>
+  </div>
+</div>
+
+<div class="field">
+  <div class="control">
+    <%= f.input :description, input_html: { class: 'textarea', placeholder: 'What is the task features?' }, wrapper: false, label_html: { class: 'label' } %>
+  </div>
+</div>
+
+<div class="field is-grouped">
+  <div class="control">
+    <%= f.button :submit, 'Add task', class: 'button is-link' %>
+  </div>
+  <div class="control">
+    <button class="button is-text">Cancel</button>
+  </div>
+</div>
+<% end %>

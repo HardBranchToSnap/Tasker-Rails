@@ -1,0 +1,9 @@
+var tasks = <%=current_user.tasks.count%>;
+
+$("#task_<%=@task.id%>").fadeOut(500, function(){
+  $(this).remove();
+});
+
+if(tasks == 0) {
+ $("#no-tasks").fadeIn(500);
+};

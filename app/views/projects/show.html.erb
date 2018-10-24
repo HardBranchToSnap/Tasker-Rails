@@ -1,0 +1,139 @@
+<script type="text/javascript">
+$(document).ready(function(){
+  $( "#modal" ).dialog({
+    autoOpen: false
+  });
+  
+  $("#opener").click(function() {
+    $("#modal").dialog('open');
+  });
+
+  $("#closer, #close-ico, #modal-bg").click(function() {
+    $("#modal").dialog('close');
+  });
+
+  var titleValue = document.getElementById('title');
+  titleValue.oninput = function(){
+    if(this.value == ''){
+     $('#title').removeClass('input').addClass('input is-danger');     
+    }else{
+     $('#title').removeClass('input is-danger').addClass('input is-success');
+    }
+  };
+
+  $("#edit_project").click(function() {
+    $("#project_name").hide();
+    $("#edit_project").hide();
+    $("#edit_project_name").show();  
+  });
+
+  $("#dismiss").click(function(){
+    $("#edit_project_name").hide();
+    $("#project_name").show();
+    $("#edit_project").show();
+    $("#edit_name_field").val("<%=@project.name%>");
+  });
+
+  $('#message_field').keydown(function (e) {
+
+  if (e.ctrlKey && e.keyCode == 13) {
+    $("#submit_chat").click();
+  }
+});
+  $("#chat").scrollTop(jQuery("#chat")[0].scrollHeight);
+});
+</script>
+<!-- Column -->
+<div class="columns">
+ <!-- Column 1 -->
+ <div class="column">
+  <h1 class="title is-1" id="project_name"><%= @project.name %></h1>
+<button class="button is-danger" id="edit_project">Edit</button>
+<!-- Edit form for Project's title -->
+<div style="display: none;" id="edit_project_name">
+  <%= simple_form_for @project, remote: true do |f| %>
+    <%= f.input :name, input_html: { class: 'input', id: 'edit_name_field' }, wrapper: false, label: false %>
+    <div style="display: none;" id="edit_errors"></div>
+    <%= f.submit 'Save', class: 'button is-success is-small'%>
+  <% end %>
+  <button class="button is-warning is-small" id="dismiss">Dismiss</button>
+</div>
+<!-- Edit form for Project's title ending-->
+<p>
+<h2 class="subtitle is-2"><%= @project.description %></h2>
+<button class="button is-success" id="opener">Add task to project</button>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+    <div class="modal-background" id="modal-bg"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Creating new task for <b><%=@project.name%></b></p>
+        <a class="delete" id="close-ico"></a>
+      </header>
+              <%= simple_form_for @task, remote: true do |f| %>
+      <section class="modal-card-body">
+        <!-- Content ... -->
+
+<br><br>
+  <div class="field">
+  <div class="control">
+    <%= f.input :title, label_html: { class: 'label' }, required: true, input_html: { class: "input", id: 'title', placeholder: 'This task title'}, wrapper: false %>
+  </div>
+  <div class="title-errors" />
+</div>
+
+
+<div class="field">
+  <%= f.label :status, class: 'label'%>
+  <div class="control">
+    <div class="select">
+      <%= f.input_field :status, label_html: { class: 'label' }, collection: Hash[ Task.statuses.map {|k, v| [k.split('_').first.capitalize, k]} ], prompt: 'Select status of task' %>
+    </div>
+  </div>
+</div>
+
+<div class="field">
+  <div class="control">
+    <%= f.input :description, input_html: { class: 'textarea', placeholder: 'What is the task features?' }, wrapper: false, label_html: { class: 'label' } %>
+  </div>
+</div>
+<%= f.hidden_field :project_id %>
+      </section>
+      <footer class="modal-card-foot">
+        <%= f.button :submit, 'Add task', class: 'button is-link', id: 'newtask' %>
+        <a class="button button is-primary" id="closer">Cancel</a>
+      </footer>
+    <% end %>
+    </div>
+  </div>
+
+<div id="project_tasks"%>
+  <%= render @project.tasks %>
+</div>
+</div>
+<!-- Column 1 ending -->
+  <!-- Column 1 -->
+  <div class="column">
+<div class="box">
+  <!-- Messages of Project -->
+  <div class="chat-box" id="chat">
+    <div id="project_messages">
+      <%= render @project.messages %>
+      <%= subscribe_to "/channel/project_#{@project.id}/messages" %>
+    </div>
+  </div>
+  <!-- Messages of Project ending -->
+
+  <!-- Project's chat -->
+    <%= simple_form_for [@project, @message], remote: true do |f| %>
+      <%= f.input :body, input_html: { class: 'textarea', placeholder: 'Enter your message', id: 'message_field'}, wrapper: false, label: false%>
+     
+      <%= f.submit 'Send', class: 'button is-success', id: 'submit_chat' %>
+    <% end %>
+  <!-- Project's chat ending-->
+  </div>
+   <!-- Column 1 ending-->
+  </div>
+</div>
+<!-- Columns ending -->
